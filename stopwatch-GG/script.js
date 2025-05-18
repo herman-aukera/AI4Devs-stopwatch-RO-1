@@ -1,93 +1,108 @@
-
-// Grab elements
 const timeInput = document.getElementById("timeInput");
 const timeDisplay = document.getElementById("timeDisplay");
 const startPauseBtn = document.getElementById("startPauseBtn");
 const resetBtn = document.getElementById("resetBtn");
 
-// Timer variables
 let timer = null;
-let elapsed = 0;
-let countdown = 0;
-let isRunning = false;
-let isPaused = false;
-let mode = "stopwatch"; // or "countdown"
+let startTime = 0;
+let elapsedTime = 0;
+let remainingTime = 0;
+let mode = "idle"; // "stopwatch" | "countdown" | "paused"
+let countdownDuration = 0;
 
-// Format seconds into HH:MM:SS
-function formatTime(seconds) {
-  const h = String(Math.floor(seconds / 3600)).padStart(2, '0');
-  const m = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
-  const s = String(seconds % 60).padStart(2, '0');
-  return `${h}:${m}:${s}`;
+function formatTime(ms) {
+  const totalSeconds = Math.floor(ms / 1000);
+  const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+  const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+  const seconds = String(totalSeconds % 60).padStart(2, '0');
+  const milliseconds = String(ms % 1000).padStart(3, '0');
+  return `${hours}:${minutes}:${seconds}.${milliseconds}`;
 }
 
-// Update time display
-function updateDisplay() {
-  const time = (mode === "stopwatch") ? elapsed : countdown;
-  timeDisplay.textContent = formatTime(time);
+function updateDisplay(ms) {
+  timeDisplay.textContent = formatTime(ms);
 }
 
-// Start or resume timer
 function startTimer() {
-  isRunning = true;
-  isPaused = false;
-  startPauseBtn.textContent = "Pause";
+  const inputSeconds = parseInt(timeInput.value, 10);
 
-  timer = setInterval(() => {
-    if (mode === "stopwatch") {
-      elapsed++;
-    } else {
-      if (countdown > 0) {
-        countdown--;
-      } else {
-        clearInterval(timer);
-        startPauseBtn.textContent = "Start";
-        isRunning = false;
-      }
-    }
-    updateDisplay();
-  }, 1000);
+  if (!isNaN(inputSeconds) && inputSeconds > 0) {
+    mode = "countdown";
+    countdownDuration = inputSeconds * 1000;
+    remainingTime = countdownDuration;
+  } else {
+    mode = "stopwatch";
+    elapsedTime = 0;
+  }
+
+  startTime = Date.now();
+  timer = setInterval(runTimer, 10);
+  startPauseBtn.textContent = "Pause";
 }
 
-// Pause logic
+function runTimer() {
+  const now = Date.now();
+  const delta = now - startTime;
+
+  if (mode === "stopwatch") {
+    updateDisplay(elapsedTime + delta);
+  } else if (mode === "countdown") {
+    const timeLeft = Math.max(0, remainingTime - delta);
+    updateDisplay(timeLeft);
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      startPauseBtn.textContent = "Start";
+      mode = "idle";
+    }
+  }
+}
+
 function pauseTimer() {
   clearInterval(timer);
-  isPaused = true;
-  isRunning = false;
+  const now = Date.now();
+  const delta = now - startTime;
+
+  if (mode === "stopwatch") {
+    elapsedTime += delta;
+  } else if (mode === "countdown") {
+    remainingTime -= delta;
+  }
+
+  mode = "paused";
   startPauseBtn.textContent = "Continue";
 }
 
-// Reset everything
-function resetTimer() {
-  clearInterval(timer);
-  elapsed = 0;
-  countdown = parseInt(timeInput.value, 10) || 0;
-  mode = countdown > 0 ? "countdown" : "stopwatch";
-  isRunning = false;
-  isPaused = false;
-  startPauseBtn.textContent = "Start";
-  updateDisplay();
+function resumeTimer() {
+  startTime = Date.now();
+  timer = setInterval(runTimer, 10);
+  startPauseBtn.textContent = "Pause";
+  if (countdownDuration > 0) {
+    mode = "countdown";
+  } else {
+    mode = "stopwatch";
+  }
 }
 
-// Event listeners
+function resetTimer() {
+  clearInterval(timer);
+  updateDisplay(0);
+  elapsedTime = 0;
+  remainingTime = 0;
+  countdownDuration = 0;
+  mode = "idle";
+  startPauseBtn.textContent = "Start";
+}
+
 startPauseBtn.addEventListener("click", () => {
-  if (!isRunning && !isPaused) {
-    const input = parseInt(timeInput.value, 10);
-    if (input > 0) {
-      mode = "countdown";
-      countdown = input;
-    } else {
-      mode = "stopwatch";
-    }
+  if (mode === "idle") {
     startTimer();
-  } else if (isRunning) {
+  } else if (mode === "paused") {
+    resumeTimer();
+  } else {
     pauseTimer();
-  } else if (isPaused) {
-    startTimer();
   }
 });
 
 resetBtn.addEventListener("click", resetTimer);
 
-// Initial display
-updateDisplay();
+updateDisplay(0);

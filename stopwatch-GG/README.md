@@ -1,74 +1,44 @@
-# Stopwatch + Countdown – AI4Devs Project
+# Stopwatch + Countdown — AI4Devs Prompt Engineering Challenge
 
 ## Overview
 
-This app is a dual-mode stopwatch and countdown timer that runs entirely in the browser using vanilla JavaScript. It mimics the core functionality and interface of [Online Stopwatch](https://www.online-stopwatch.com).
+A minimalist, fully functional stopwatch and countdown timer with milliseconds built using vanilla JavaScript and prompt engineering techniques.
 
 ## Features
 
-- Input seconds to run countdown
-- If no input, acts as a stopwatch
-- Start button toggles to Pause and Continue
-- Reset resets both timer and UI state
-- Pure HTML + JS, no frameworks or build tools
-
-## Technologies
-
-- HTML5
-- JavaScript (ES6+)
-- No libraries or CSS frameworks
+- Countdown input (in seconds)
+- Toggle button: Start → Pause → Continue
+- Millisecond-accurate time display (`HH:MM:SS.mmm`)
+- Reset button resets time + UI
+- No frameworks or libraries used
 
 ## How to Run
 
-1. Clone or download this repo
+1. Download or clone this repository
 2. Open `index.html` in any browser
-3. Type a number (seconds) for countdown or leave empty for stopwatch
-4. Press **Start** to begin
-5. Use **Pause**, **Continue**, or **Reset** accordingly
+3. Enter a countdown time or leave blank to start stopwatch
+4. Click “Start” to begin, then use “Pause”, “Continue”, or “Reset”
 
----
+## Manual Test Cases
+
+- [ ] Input = 10, Start → counts down to 0
+- [ ] No input, Start → stopwatch mode increments with ms
+- [ ] Pause freezes time (stopwatch + countdown)
+- [ ] Continue resumes time accurately
+- [ ] Reset clears display + brings button back to Start
+- [ ] Edge case: input = 0 behaves as stopwatch
+- [ ] Rapid Start/Pause/Continue transitions behave consistently
 
 ## Time Spent
 
-- Prompt iteration: 25 mins
-- Coding via ChatGPT: 40 mins
-- Testing and formatting: 15 mins
+- Prompt design: 20 minutes
+- Code generation/testing: 45 minutes
 
-## Chatbot Used
+## Tools Used
 
-- ChatGPT-4 (Prompt engineering assisted)
-- Full prompt history in `prompts.md`
+- ChatGPT-4 (May 2025)
+- Vanilla JS, HTML5
 
----
+## Prompt Used
 
-## Test Cases (Manual)
-
-### 🎯 Core UI
-
-- [ ] App loads and displays `00:00:00`
-- [ ] Countdown input accepts numbers only
-- [ ] Start button is visible and labeled properly
-- [ ] Time updates every second on start
-
-### 🛠 Stopwatch Logic
-
-- [ ] Without input, pressing Start begins stopwatch
-- [ ] Timer increases every second
-- [ ] Pause freezes time
-- [ ] Continue resumes exactly from paused state
-- [ ] Reset brings everything to `00:00:00` and resets UI
-
-### ⏲ Countdown Logic
-
-- [ ] Input `10` → Start → counts down from 10 to 0
-- [ ] At `0`, timer stops and button resets to “Start”
-- [ ] Reset cancels the countdown
-
-### 📉 Edge Cases
-
-- [ ] Input non-number → treated as stopwatch
-- [ ] Start → Pause → Reset = all correct UI updates
-- [ ] Start → Reset mid-countdown = resets all
-- [ ] Input = 0 → treated as stopwatch
-
----
+Included in `prompts.md`

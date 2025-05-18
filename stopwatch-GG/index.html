@@ -4,18 +4,30 @@
   <meta charset="UTF-8" />
   <title>Stopwatch + Countdown</title>
   <style>
-    body { font-family: sans-serif; text-align: center; margin-top: 40px; }
-    #timeDisplay { font-size: 48px; margin: 20px; }
-    button { font-size: 18px; margin: 5px; padding: 10px 20px; }
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin-top: 40px;
+    }
+    #timeDisplay {
+      font-size: 48px;
+      margin: 20px;
+      letter-spacing: 1px;
+    }
+    input, button {
+      font-size: 18px;
+      margin: 5px;
+      padding: 10px 20px;
+    }
   </style>
 </head>
 <body>
 
   <h1>Stopwatch + Countdown</h1>
 
-  <input id="timeInput" type="number" min="0" placeholder="Countdown (secs)" />
+  <input id="timeInput" type="number" min="0" placeholder="Countdown (seconds)" />
 
-  <div id="timeDisplay">00:00:00</div>
+  <div id="timeDisplay">00:00:00.000</div>
 
   <button id="startPauseBtn">Start</button>
   <button id="resetBtn">Reset</button>
